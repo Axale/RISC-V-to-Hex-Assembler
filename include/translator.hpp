@@ -3,6 +3,8 @@
 #include <stdint.h>
 #include <string>
 #include <vector>
+#include <iterator>
+#include <memory>
 
 
 class TranslatedInstruction 
@@ -24,7 +26,30 @@ class Translator
     uint32_t instruction;
     std::string::iterator strit;
     std::string line;
+    class Instr_Op {
+      public:
+      std::string instrString;
+      uint32_t instrNum;
+      uint32_t instrType;
+      Instr_Op(std::string instructionString, uint32_t instructionNum, uint32_t instr_type);
+      ~Instr_Op();
+    };
+
+    class InstrVector {
+      private: 
+      uint32_t mode;
+      std::vector<Instr_Op*> instrIndex;
+      std::vector<Instr_Op*>::iterator indexIt;
+      
+      public:
+      InstrVector(uint32_t mode);
+      ~InstrVector();
+      bool read_instruction(std::string inststring, uint32_t& instruction, uint32_t& op);
+    };
     
+    InstrVector* opVector;
+    InstrVector* argVector;
+
     bool read_opcode(uint32_t &op);
     int32_t op_recurse();
     bool read_arg(uint32_t op);
