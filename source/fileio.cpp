@@ -1,25 +1,14 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include "../include/fileio.hpp"
 
 using namespace std;
-class fileio
-{
-private:
-  string inputPath;
-  ifstream inputFile;
-  ofstream outputFile;
-  string outputPath;
-public:
-  fileio(char* inputString);
-  ~fileio();
-  bool open_input(vector<string>& inputBuf);
-};
 
 fileio::fileio(char* inputString)
 {
-  inputPath = inputString;
-  outputPath = "meminit.hex";
+  this->inputPath = inputString;
+  this->outputPath = "meminit.hex";
 }
 
 fileio::~fileio()
