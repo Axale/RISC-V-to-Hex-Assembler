@@ -105,7 +105,84 @@ Translator::InstrVector::InstrVector(uint32_t mode) {
 
     };
   } else {
-
+      new Instr_Op("x0", 0x00000000, ARG);
+      new Instr_Op("zero", 0x00000000, ARG);
+      new Instr_Op("x1", 0x00000001, ARG);
+      new Instr_Op("ra", 0x00000001, ARG);
+      new Instr_Op("x2", 0x00000002, ARG);
+      new Instr_Op("sp", 0x00000002, ARG);
+      new Instr_Op("x3", 0x00000003, ARG);
+      new Instr_Op("gp", 0x00000003, ARG);
+      new Instr_Op("x4", 0x00000004, ARG);
+      new Instr_Op("rp", 0x00000004, ARG);
+      new Instr_Op("x5", 0x00000005, ARG);
+      new Instr_Op("t0", 0x00000005, ARG);
+      new Instr_Op("x6", 0x00000006, ARG);
+      new Instr_Op("t1", 0x00000006, ARG);
+      new Instr_Op("x7", 0x00000007, ARG);
+      new Instr_Op("t2", 0x00000007, ARG);
+      new Instr_Op("x8", 0x00000008, ARG);
+      new Instr_Op("s0", 0x00000008, ARG);
+      new Instr_Op("fp", 0x00000008, ARG);
+      new Instr_Op("x9", 0x00000009, ARG);
+      new Instr_Op("s1", 0x00000009, ARG);
+      new Instr_Op("x10", 0x0000000A, ARG);
+      new Instr_Op("a0", 0x0000000A, ARG);
+      new Instr_Op("x11", 0x0000000B, ARG);
+      new Instr_Op("a1", 0x0000000B, ARG);
+      new Instr_Op("x12", 0x0000000C, ARG);
+      new Instr_Op("a2", 0x0000000C, ARG);
+      new Instr_Op("x13", 0x0000000D, ARG);
+      new Instr_Op("a3", 0x0000000D, ARG);
+      new Instr_Op("x14", 0x0000000E, ARG);
+      new Instr_Op("a4", 0x0000000E, ARG);
+      new Instr_Op("x15", 0x0000000F, ARG);
+      new Instr_Op("a5", 0x0000000F, ARG);
+      new Instr_Op("x16", 0x00000010, ARG);
+      new Instr_Op("a6", 0x00000010, ARG);
+      new Instr_Op("x17", 0x00000011, ARG);
+      new Instr_Op("a7", 0x00000011, ARG);
+      new Instr_Op("x18", 0x00000012, ARG);
+      new Instr_Op("s2", 0x00000012, ARG);
+      new Instr_Op("x19", 0x00000013, ARG);
+      new Instr_Op("s3", 0x00000013, ARG);
+      new Instr_Op("x20", 0x00000014, ARG);
+      new Instr_Op("s4", 0x00000014, ARG);
+      new Instr_Op("x21", 0x00000015, ARG);
+      new Instr_Op("s5", 0x00000015, ARG);
+      new Instr_Op("x22", 0x00000016, ARG);
+      new Instr_Op("s6", 0x00000016, ARG);
+      new Instr_Op("x23", 0x00000017, ARG);
+      new Instr_Op("s7", 0x00000017, ARG);
+      new Instr_Op("x24", 0x00000018, ARG);
+      new Instr_Op("s8", 0x00000018, ARG);
+      new Instr_Op("x25", 0x00000019, ARG);
+      new Instr_Op("s9", 0x00000019, ARG);
+      new Instr_Op("x26", 0x0000001A, ARG);
+      new Instr_Op("s10", 0x0000001A, ARG);
+      new Instr_Op("x27", 0x0000001B, ARG);
+      new Instr_Op("s11", 0x0000001B, ARG);
+      new Instr_Op("x28", 0x0000001C, ARG);
+      new Instr_Op("t3", 0x0000001C, ARG);
+      new Instr_Op("x29", 0x0000001D, ARG);
+      new Instr_Op("t4", 0x0000001D, ARG);
+      new Instr_Op("x30", 0x0000001E, ARG);
+      new Instr_Op("t5", 0x0000001E, ARG);
+      new Instr_Op("x31", 0x0000001F, ARG);
+      new Instr_Op("t6", 0x0000001F, ARG);
   }
   indexIt = begin(instrIndex);
+}
+
+uint32_t Translator::InstrVector::parse_instruction(string instrString, uint32_t& op) {
+  op = ERR;
+  uint32_t instruction = 0x0;
+  for(indexIt = instrIndex.begin(); indexIt != instrIndex.end(); indexIt++) {
+    if(strcmp(instrString.c_str(), (*indexIt)->instrString.c_str())) {
+      op = (*indexIt)->instrType;
+      return ((*indexIt)->instrNum);
+    }
+  }
+
+  return 0x0;
 }
