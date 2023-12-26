@@ -44,14 +44,14 @@ class Translator
       public:
       InstrVector(uint32_t mode);
       ~InstrVector();
-      uint32_t parse_instruction(std::string::iterator& stringIterator, uint32_t& op);
+      uint32_t parse_instruction(std::string instrString, uint32_t& op);
     };
     
     InstrVector* opVector;
     InstrVector* argVector;
 
-    bool read_opcode(uint32_t &op);
-    bool read_arg(uint32_t op);
+    bool read_opcode(uint32_t& op);
+    bool read_arg(uint32_t& op);
     bool read_line(std::vector<TranslatedInstruction>& instructionVector);
     enum op_type {R, I, S, B, U, J, ERR, ARG, PSEU};
     void invalid_syntax();

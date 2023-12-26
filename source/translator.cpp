@@ -32,6 +32,7 @@ Translator::~Translator() {
 }
 
 bool Translator::read_opcode(uint32_t& op){
+  op = ERR;
   string operation = "";
   string::iterator start = strit;
   for(; isalpha(*strit); strit++) {
@@ -43,7 +44,13 @@ bool Translator::read_opcode(uint32_t& op){
   };
   //lowercase the whole thing
 
-  
+  instruction = opVector->parse_instruction(operation, op);
+  if(op == ERR)  
+  {
+    return false;
+  }  
+
+  return true;
 
 }
 
@@ -178,7 +185,7 @@ uint32_t Translator::InstrVector::parse_instruction(string instrString, uint32_t
   op = ERR;
   uint32_t instruction = 0x0;
   for(indexIt = instrIndex.begin(); indexIt != instrIndex.end(); indexIt++) {
-    if(strcmp(instrString.c_str(), (*indexIt)->instrString.c_str())) {
+    if(!strcmp(instrString.c_str(), (*indexIt)->instrString.c_str())) {
       op = (*indexIt)->instrType;
       return ((*indexIt)->instrNum);
     }
