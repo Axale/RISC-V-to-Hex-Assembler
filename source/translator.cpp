@@ -31,10 +31,55 @@ Translator::~Translator() {
   delete argVector;
 }
 
+bool Translator::translate_immediate(uint32_t& op) {
+  enum num_base {DEC, HEX, BIN};
+  uint32_t base = DEC;
+
+  for(;*strit == '0'; strit++) {
+    if(*(strit + 1) == 'x' || *(strit + 1) == 'h') {
+      if(base == HEX || base == BIN) {
+        return false;
+      }
+      base = HEX;
+      strit++;
+    } else if((*strit + 1) == 'b') {
+      if(base == HEX || base == BIN) {
+        return false;
+      }
+      base = HEX;
+      strit++;
+    }
+  }
+
+  for(;isalnum(*strit); strit++) {
+    
+  }
+}
+
+bool Translator::read_arg(uint32_t& op, uint32_t shft) {
+  op = ERR;
+  string operation = "";
+  for(; isalpha(*strit)); strit++) {
+    operation.append(1, *strit);
+  }
+
+  if(operation.empty())
+  {
+    return false;
+  };
+  //lowercase the whole thing
+
+  instruction |= (argVector->parse_instruction(operation, op) << shft);
+  if(op == ERR) 
+  {
+    return false;
+  }
+  
+  return true;
+}
 bool Translator::read_opcode(uint32_t& op){
   op = ERR;
   string operation = "";
-  string::iterator start = strit;
   for(; isalpha(*strit); strit++) {
     operation.append(1, *strit);
   }
@@ -43,6 +88,7 @@ bool Translator::read_opcode(uint32_t& op){
     return false;
   };
   //lowercase the whole thing
+  
 
   instruction = opVector->parse_instruction(operation, op);
   if(op == ERR)  
