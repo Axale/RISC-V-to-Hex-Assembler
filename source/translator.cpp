@@ -3,6 +3,7 @@
 #include <string>
 #include <cctype>
 #include <cstring>
+#include <charconv>
 
 using namespace std;
 TranslatedInstruction::TranslatedInstruction(uint32_t instruction, uint32_t address){
@@ -34,6 +35,8 @@ Translator::~Translator() {
 bool Translator::translate_immediate(uint32_t& op) {
   enum num_base {DEC, HEX, BIN};
   uint32_t base = DEC;
+  uint32_t imm = 0;
+  if(!isalnum(*strit)) return false;
 
   for(;*strit == '0'; strit++) {
     if(*(strit + 1) == 'x' || *(strit + 1) == 'h') {
@@ -50,16 +53,49 @@ bool Translator::translate_immediate(uint32_t& op) {
       strit++;
     }
   }
+  char* start = &(*strit);
+  
+  for(;isalnum(*strit); strit++);
+  char* end = &(*(strit - 1));
 
-  for(;isalnum(*strit); strit++) {
-    
+  switch (base)
+  {
+  case HEX:
+    from_chars(start, end, (int&)imm, 16);
+    break;
+  
+  case BIN:
+    from_chars(start, end, (int&)imm, 2);
+    break;
+
+  default:
+    from_chars(start, end, (int&)imm);
+    break;
+  }
+
+  switch (op) {
+    S:
+      instruction |= ((imm << 27) >> 20) | ((imm >> 5) << 25);
+    break;
+    B:
+      instruction |=  ((0x800 & imm) >> 4)| (((imm >> 1) << 28) >> 20) | ((imm >> 5) << 25) | ((imm & 0x1000) << 19);
+    break;
+    U:
+      instruction |= imm & 0xFFFFF000;
+    break;
+    J:
+      instruction |= imm & 0x000FF000 | (0x800 & imm << 9) | (imm & 0x7FE << 20) | (0x0010000 & imm << 11);
+    break;
+    default:
+      instruction |= imm << 20;
+      break;
   }
 }
 
 bool Translator::read_arg(uint32_t& op, uint32_t shft) {
   op = ERR;
   string operation = "";
-  for(; isalpha(*strit)); strit++) {
+  for(; isalnum(*strit); strit++) {
     operation.append(1, *strit);
   }
 
