@@ -90,6 +90,7 @@ bool Translator::translate_immediate(uint32_t& op) {
       instruction |= imm << 20;
       break;
   }
+  return true;
 }
 
 bool Translator::read_arg(uint32_t& op, uint32_t shft) {
@@ -142,6 +143,10 @@ Translator::Instr_Op::Instr_Op(string instructionString, uint32_t insturctionNum
   instrType = instructionType;
 }
 
+Translator::Instr_Op::~Instr_Op(){
+  return;
+}
+
 Translator::InstrVector::InstrVector(uint32_t mode) {
   if(mode) {
     instrIndex = {
@@ -153,7 +158,7 @@ Translator::InstrVector::InstrVector(uint32_t mode) {
       new Instr_Op("and", 0x00000033 + 0x7 << 12, R),
       new Instr_Op("sll", 0x00000033 + 0x1 << 12, R),
       new Instr_Op("srl", 0x00000033 + 0x5 << 12, R),
-      new Instr_Op("sra", 0x00000033 + 0x5 << 12 + 0x20 << 25, R),
+      new Instr_Op("sra", 0x00000033 + (0x5 << 12) + (0x20 << 25), R),
       new Instr_Op("slt", 0x00000033 + 0x2 << 12, R),
       new Instr_Op("sltu", 0x00000033 + 0x3 << 12, R),
 
@@ -262,12 +267,17 @@ Translator::InstrVector::InstrVector(uint32_t mode) {
   }
   indexIt = begin(instrIndex);
 }
+Translator::InstrVector::~InstrVector() {
+  uint32_t max_size = instrIndex.size();
+  for(uint32_t i = 0; i < max_size; i++)
+    delete instrIndex[i];  
+}
 
 uint32_t Translator::InstrVector::parse_instruction(string instrString, uint32_t& op) {
   op = ERR;
   uint32_t instruction = 0x0;
   for(indexIt = instrIndex.begin(); indexIt != instrIndex.end(); indexIt++) {
-    if(!strcmp(instrString.c_str(), (*indexIt)->instrString.c_str())) {
+    if(instrString == (*indexIt)->instrString) {
       op = (*indexIt)->instrType;
       return ((*indexIt)->instrNum);
     }

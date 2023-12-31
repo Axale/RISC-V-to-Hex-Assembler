@@ -3,7 +3,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
-class fileio
+class filein
 {
 private:
   std::string inputPath;
@@ -11,8 +11,8 @@ private:
   std::ofstream outputFile;
   std::string outputPath;
 public:
-  fileio(char* inputString);
-  ~fileio();
+  filein(std::string inputString);
+  ~filein();
   bool open_input(std::vector<std::string>& inputBuf);
 };
 #endif

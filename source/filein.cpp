@@ -1,22 +1,21 @@
 #include <fstream>
 #include <string>
 #include <vector>
-#include "../include/fileio.hpp"
+#include "../include/filein.hpp"
 
 using namespace std;
 
-fileio::fileio(char* inputString)
+filein::filein(string inputString)
 {
   this->inputPath = inputString;
-  this->outputPath = "meminit.hex";
 }
 
-fileio::~fileio()
+filein::~filein()
 {
     inputFile.close();
 }
 
-bool fileio::open_input(vector<string>& inputVector) {
+bool filein::open_input(vector<string>& inputVector) {
   inputFile.open(inputPath, ios::in);
 
   // Checks if the file successfully opened, then copies it line by line into a vector of strings
