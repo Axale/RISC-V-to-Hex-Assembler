@@ -1,6 +1,8 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <limits>
+#include <iostream>
 #include "../include/filein.hpp"
 
 using namespace std;

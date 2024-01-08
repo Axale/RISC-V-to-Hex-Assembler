@@ -26,7 +26,6 @@ Translator::Translator() {
   opVector = new InstrVector(1);
   argVector = new InstrVector(0);
 }
-
 Translator::~Translator() {
   delete opVector;
   delete argVector;
@@ -92,7 +91,6 @@ bool Translator::translate_immediate(uint32_t& op) {
   }
   return true;
 }
-
 bool Translator::read_arg(uint32_t& op, uint32_t shft) {
   op = ERR;
   string operation = "";
@@ -136,13 +134,61 @@ bool Translator::read_opcode(uint32_t& op){
   return true;
 
 }
+bool Translator::read_line(vector<TranslatedInstruction*>& InstructionVector){
+  instruction = 0;
+  uint32_t op = ERR;
+  for(strit = line.begin(); strit < line.end() || (op != ERR); strit++) {
+    if(!isspace(*strit)) {
+      if(!read_opcode(op)) return false;
+    }
+  }
+
+  switch(op) {
+    case R:
+      uint8_t count = 0;
+      uint32_t shft[] = {7, 15, 20};
+      for(;strit < line.end(); strit++) {
+        if(!isspace(*strit) ) {
+          if((count > 2)) {
+            if(*strit == '#') break; 
+            else return false;
+          }
+          
+          if(read_arg(op, shft[count])) count++; 
+          else return false;
+
+          for(;strit < line.end(); strit++) {
+            if(!isspace(*strit)) {
+              if (*strit == ',') {
+                break;
+              } else {
+                return false;
+              }
+            }
+          }
+
+        }
+      }
+      if (count != 3) {
+        return false;
+      }
+    break;
+    case I: break;
+    case B: break;
+    case U: break;
+    case S: break;
+    case J: break;
+    default:
+      return false;
+  }
+
+}
 
 Translator::Instr_Op::Instr_Op(string instructionString, uint32_t insturctionNum, uint32_t instructionType) {
   instrString = instructionString;
   instrNum = insturctionNum;
   instrType = instructionType;
 }
-
 Translator::Instr_Op::~Instr_Op(){
   return;
 }
@@ -272,7 +318,6 @@ Translator::InstrVector::~InstrVector() {
   for(uint32_t i = 0; i < max_size; i++)
     delete instrIndex[i];  
 }
-
 uint32_t Translator::InstrVector::parse_instruction(string instrString, uint32_t& op) {
   op = ERR;
   uint32_t instruction = 0x0;

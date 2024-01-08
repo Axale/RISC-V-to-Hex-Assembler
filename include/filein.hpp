@@ -8,8 +8,6 @@ class filein
 private:
   std::string inputPath;
   std::ifstream inputFile;
-  std::ofstream outputFile;
-  std::string outputPath;
 public:
   filein(std::string inputString);
   ~filein();
